@@ -1,0 +1,7 @@
+{
+  "name": "Majordomo",
+  "description": "A premium real-time property monitoring dashboard for high-net-worth individuals managing multiple luxury residences with a superyacht-bridge aesthetic.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
