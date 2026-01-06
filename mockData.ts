@@ -1,4 +1,3 @@
-
 import { Property } from './types';
 
 export const MOCK_PROPERTIES: Property[] = [
@@ -18,7 +17,7 @@ export const MOCK_PROPERTIES: Property[] = [
       humidity: 78,
       windSpeed: 15,
       aqi: 12,
-      alerts: ["Winter storm warning until 8 PM MST"]
+      alerts: ["Winter storm warning until 8PM MST"]
     },
     security: {
       armed: true,

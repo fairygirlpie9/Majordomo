@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { WineCellar } from '../../types';
 import StatusCard from '../StatusCard';
@@ -22,27 +21,21 @@ const WineCellarModule: React.FC<Props> = ({ data, theme, tempUnit, onOpenInvent
     <StatusCard title="Wine Cellar" icon={GlassWater} theme={theme} accentColor="rose" footer="Live Telemetry">
       <div className="space-y-6">
         {/* Inventory Summary */}
-        <div className={`flex items-center justify-between p-6 rounded-3xl ${isDark ? 'bg-[#FCA311]/10' : 'bg-[#FCA311]/5'}`}>
-          <div className="flex items-center gap-6">
-            <div className="w-16 h-16 rounded-2xl bg-[#FCA311]/20 flex items-center justify-center text-[#FCA311]">
-              <Database size={32} />
-            </div>
-            <div>
-              <div className={`text-3xl font-bold leading-none ${isDark ? 'text-[#E5E5E5]' : 'text-[#000000]'}`}>
-                {data.inventory.totalBottles}
-              </div>
-              <p className="text-xs uppercase tracking-wider opacity-50 mt-2">Total Collection</p>
-            </div>
+        <div className={`flex items-center gap-4 p-5 sm:p-6 rounded-3xl ${isDark ? 'bg-[#FCA311]/10' : 'bg-[#FCA311]/5'}`}>
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#FCA311]/20 flex items-center justify-center text-[#FCA311] flex-shrink-0">
+            <Database size={28} className="sm:w-[32px] sm:h-[32px]" />
           </div>
-          <div className="text-right">
-             <div className="text-xl font-bold text-[#FCA311]">${(data.inventory.estimatedValue / 1000).toFixed(0)}k</div>
-             <p className="text-[10px] opacity-40 uppercase font-bold mt-1">Est. Value</p>
+          <div>
+            <div className={`text-2xl sm:text-3xl font-bold leading-none ${isDark ? 'text-[#E5E5E5]' : 'text-[#000000]'}`}>
+              {data.inventory.totalBottles}
+            </div>
+            <p className="text-xs uppercase tracking-wider opacity-50 mt-2">Total Collection</p>
           </div>
         </div>
 
         {/* Environmental Sliders */}
-        <div className="grid grid-cols-2 gap-6">
-          <div className={`p-6 rounded-3xl ${isDark ? 'bg-[#E5E5E5]/5' : 'bg-[#000000]/5'}`}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <div className={`p-5 sm:p-6 rounded-3xl ${isDark ? 'bg-[#E5E5E5]/5' : 'bg-[#000000]/5'}`}>
             <div className="flex items-center gap-2 mb-4 opacity-50">
               <Thermometer size={18} className="text-[#FCA311]" />
               <span className="text-xs uppercase font-bold tracking-wider">Temp</span>
@@ -52,7 +45,7 @@ const WineCellarModule: React.FC<Props> = ({ data, theme, tempUnit, onOpenInvent
                <div className="h-full bg-[#FCA311] w-[65%]" />
             </div>
           </div>
-          <div className={`p-6 rounded-3xl ${isDark ? 'bg-[#E5E5E5]/5' : 'bg-[#000000]/5'}`}>
+          <div className={`p-5 sm:p-6 rounded-3xl ${isDark ? 'bg-[#E5E5E5]/5' : 'bg-[#000000]/5'}`}>
             <div className="flex items-center gap-2 mb-4 opacity-50">
               <Droplets size={18} className="text-[#FCA311]" />
               <span className="text-xs uppercase font-bold tracking-wider">Humidity</span>
@@ -66,7 +59,7 @@ const WineCellarModule: React.FC<Props> = ({ data, theme, tempUnit, onOpenInvent
 
         <button 
           onClick={onOpenInventory}
-          className={`w-full group flex items-center justify-between p-6 rounded-3xl transition-all ${
+          className={`w-full group flex items-center justify-between p-5 sm:p-6 rounded-3xl transition-all ${
             isDark ? 'bg-[#E5E5E5]/5 hover:bg-[#E5E5E5]/10' : 'bg-[#000000]/5 hover:bg-[#000000]/10'
           }`}
         >

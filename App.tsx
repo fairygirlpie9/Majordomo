@@ -48,9 +48,12 @@ const App: React.FC = () => {
         toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
       />
 
-      <main className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10 pb-20 pt-24">
+      {/* Sidebar */}
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} theme={theme} />
+
+      <main className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10 pb-20 pt-24 md:pt-28">
         {/* Property Selection */}
-        <section className="mb-10">
+        <section className="mb-6 md:mb-10">
           <PropertySwitcher 
             properties={MOCK_PROPERTIES}
             activeId={activePropertyId}
@@ -75,7 +78,7 @@ const App: React.FC = () => {
 
       {/* Floating Alerts Summary for Mobile - Using Orange #FCA311 */}
       {activeProperty.alerts.filter(a => !a.acknowledged).length > 0 && (
-        <div className="fixed bottom-6 right-6 lg:hidden">
+        <div className="fixed bottom-6 right-6 lg:hidden z-40">
           <button className="bg-[#FCA311] text-[#000000] p-4 rounded-full shadow-lg shadow-[#FCA311]/20 animate-pulse">
             <span className="sr-only">Active Alerts</span>
             <div className="relative">

@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Property } from '../types';
-import { MapPin, CloudSun, AlertTriangle, Clock } from 'lucide-react';
+import { MapPin, CloudSun, AlertTriangle, Clock, ShieldCheck, Unlock } from 'lucide-react';
 
 interface PropertySwitcherProps {
   properties: Property[];
@@ -16,7 +15,7 @@ const PropertySwitcher: React.FC<PropertySwitcherProps> = ({ properties, activeI
   const isDark = theme === 'dark';
 
   return (
-    <div className="flex overflow-x-auto no-scrollbar gap-5 pb-4 px-2 -mx-2">
+    <div className="flex overflow-x-auto no-scrollbar gap-4 sm:gap-5 py-4 px-4 -mx-4">
       {properties.map((prop) => {
         const isActive = prop.id === activeId;
         const unreadAlerts = prop.alerts.filter(a => !a.acknowledged).length;
@@ -38,7 +37,7 @@ const PropertySwitcher: React.FC<PropertySwitcherProps> = ({ properties, activeI
           <button
             key={prop.id}
             onClick={() => onSelect(prop.id)}
-            className={`flex-shrink-0 w-80 text-left rounded-3xl p-6 transition-all duration-500 group relative border border-transparent ${
+            className={`flex-shrink-0 w-72 sm:w-80 text-left rounded-3xl p-5 sm:p-6 transition-all duration-500 group relative border border-transparent ${
               isActive 
                 ? (isDark 
                     ? 'bg-[#14213D] ring-1 ring-[#FCA311]/50 shadow-2xl shadow-[#000000]/50' 
@@ -48,18 +47,14 @@ const PropertySwitcher: React.FC<PropertySwitcherProps> = ({ properties, activeI
                     : 'bg-white/40 hover:bg-white/80')
             }`}
           >
-            {isActive && (
-              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#FCA311] to-[#14213D] rounded-t-3xl" />
-            )}
-
-            <div className="flex justify-between items-start mb-5">
+            <div className="flex justify-between items-start mb-4 sm:mb-5">
                <div>
-                 <h3 className={`font-serif-display font-medium text-2xl transition-colors ${isActive ? (isDark ? 'text-[#E5E5E5]' : 'text-[#000000]') : 'opacity-60 text-current'}`}>
+                 <h3 className={`font-serif-display font-medium text-xl sm:text-2xl transition-colors ${isActive ? (isDark ? 'text-[#E5E5E5]' : 'text-[#000000]') : 'opacity-60 text-current'}`}>
                    {prop.name}
                  </h3>
                  <div className="flex items-center gap-2 mt-2 opacity-60">
                     <MapPin size={14} />
-                    <span className="text-sm uppercase tracking-wide">{prop.location.address.split(',')[1].trim()}</span>
+                    <span className="text-xs sm:text-sm uppercase tracking-wide truncate max-w-[150px]">{prop.location.address.split(',')[1].trim()}</span>
                  </div>
                </div>
                <div className="flex flex-col items-end gap-2">
@@ -78,15 +73,18 @@ const PropertySwitcher: React.FC<PropertySwitcherProps> = ({ properties, activeI
 
             <div className="flex items-end justify-between">
               <div className="flex items-center gap-3">
-                <CloudSun size={28} className={isActive ? 'text-[#FCA311]' : 'text-current opacity-40'} />
-                <span className={`text-3xl font-light tabular-nums ${isActive ? (isDark ? 'text-[#E5E5E5]' : 'text-[#000000]') : 'text-current opacity-60'}`}>
+                <CloudSun size={24} className={`sm:w-7 sm:h-7 ${isActive ? 'text-[#FCA311]' : 'text-current opacity-40'}`} />
+                <span className={`text-2xl sm:text-3xl font-light tabular-nums ${isActive ? (isDark ? 'text-[#E5E5E5]' : 'text-[#000000]') : 'text-current opacity-60'}`}>
                   {tempVal}°
                 </span>
               </div>
-              <div className={`text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg ${
-                prop.security.armed ? 'bg-[#FCA311]/20 text-[#FCA311]' : 'bg-current bg-opacity-10 text-current opacity-60'
+              <div className={`flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest px-2.5 sm:px-3 py-1.5 rounded-lg border border-transparent ${
+                prop.security.armed 
+                  ? 'bg-[#FCA311]/20 text-[#FCA311]' 
+                  : (isDark ? 'bg-white/10 text-white/80' : 'bg-black/5 text-black/60')
               }`}>
-                {prop.security.armed ? 'Armed' : 'Disarmed'}
+                {prop.security.armed ? <ShieldCheck size={14} /> : <Unlock size={14} />}
+                <span>{prop.security.armed ? 'Armed' : 'Disarmed'}</span>
               </div>
             </div>
           </button>

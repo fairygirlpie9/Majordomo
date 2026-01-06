@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Alert } from '../../types';
 import StatusCard from '../StatusCard';
@@ -15,7 +14,7 @@ const AlertsModule: React.FC<Props> = ({ alerts, theme }) => {
 
   return (
     <StatusCard title="System Alerts" icon={Bell} theme={theme} accentColor="rose" footer="Monitoring Live">
-      <div className="space-y-5">
+      <div className="space-y-4">
         {activeAlerts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 opacity-40 text-center">
             <CheckCircle2 size={40} className="mb-4 text-[#FCA311]" />
@@ -26,35 +25,42 @@ const AlertsModule: React.FC<Props> = ({ alerts, theme }) => {
           activeAlerts.map((alert) => (
             <div 
               key={alert.id}
-              className={`p-5 rounded-3xl border flex gap-5 ${
-                alert.severity === 'critical' 
-                  ? 'bg-[#FCA311]/10 border-[#FCA311]/20 text-[#FCA311]' 
-                  : 'bg-[#FCA311]/5 border-[#FCA311]/10 text-[#FCA311]'
+              className={`p-5 rounded-3xl border flex flex-col gap-3 transition-colors ${
+                isDark 
+                  ? 'bg-[#000000]/20 border-[#FCA311]/20' 
+                  : 'bg-[#FCA311]/5 border-[#FCA311]/20'
               }`}
             >
-              <div className="mt-1">
-                {alert.severity === 'info' ? <Info size={20} /> : <AlertTriangle size={20} />}
+              {/* Header: Severity & Time */}
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2 text-[#FCA311]">
+                   {alert.severity === 'info' ? <Info size={16} /> : <AlertTriangle size={16} />}
+                   <span className="text-[10px] font-bold uppercase tracking-widest">
+                      {alert.severity}
+                   </span>
+                </div>
+                <span className="text-[10px] tabular-nums opacity-60">
+                  {new Date(alert.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
               </div>
-              <div className="flex-1">
-                <div className="flex justify-between items-start mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest leading-none">
-                    {alert.severity}
-                  </span>
-                  <span className="text-[10px] tabular-nums opacity-60">
-                    {new Date(alert.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </div>
-                <p className={`text-sm font-medium leading-relaxed ${isDark ? 'text-[#E5E5E5]' : 'text-[#000000]'}`}>
-                  {alert.message}
-                </p>
-                <div className="mt-4 flex gap-3">
-                  <button className="px-4 py-2 rounded-xl bg-current bg-opacity-10 hover:bg-opacity-20 text-[10px] font-bold uppercase tracking-wider transition-colors">
-                    Acknowledge
-                  </button>
-                  <button className="px-4 py-2 rounded-xl bg-current bg-opacity-5 hover:bg-opacity-10 text-[10px] font-bold uppercase tracking-wider transition-colors opacity-60">
-                    Details
-                  </button>
-                </div>
+
+              {/* Message */}
+              <p className={`text-sm font-medium leading-relaxed ${isDark ? 'text-[#E5E5E5]' : 'text-[#000000]'}`}>
+                {alert.message}
+              </p>
+
+              {/* Actions */}
+              <div className="flex gap-3 mt-2">
+                <button className="flex-1 py-3 px-4 rounded-xl bg-[#FCA311] text-[#000000] text-[10px] font-bold uppercase tracking-wider hover:bg-[#FCA311]/90 transition-all shadow-lg shadow-[#FCA311]/10">
+                  ACKNOWLEDGE
+                </button>
+                <button className={`py-3 px-6 rounded-xl border text-[10px] font-bold uppercase tracking-wider transition-colors ${
+                  isDark 
+                    ? 'border-[#E5E5E5]/10 hover:bg-[#E5E5E5]/5 text-[#E5E5E5]' 
+                    : 'border-[#000000]/10 hover:bg-[#000000]/5 text-[#000000]'
+                }`}>
+                  DETAILS
+                </button>
               </div>
             </div>
           ))
