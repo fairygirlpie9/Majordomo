@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Property } from '../types';
 import { Sun, Moon, Bell, Shield, MapPin, Menu } from 'lucide-react';
@@ -55,13 +54,6 @@ const Header: React.FC<HeaderProps> = ({ theme, toggleTheme, tempUnit, toggleTem
               </p>
             </div>
           </div>
-
-          <div className={`hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium border ${
-            isDark ? 'bg-[#000000]/20 border-[#E5E5E5]/10' : 'bg-[#E5E5E5]/50 border-[#000000]/10'
-          }`}>
-            <div className={`w-2 h-2 rounded-full bg-[#FCA311] animate-pulse`} />
-            <span className="opacity-70">Live Telemetry</span>
-          </div>
         </div>
 
         {/* Center: Active Property Mini Info */}
@@ -82,9 +74,13 @@ const Header: React.FC<HeaderProps> = ({ theme, toggleTheme, tempUnit, toggleTem
           <div className="hidden sm:flex items-center gap-4 pr-6 sm:pr-8 border-r border-current border-opacity-10">
             <div className="text-right">
               <p className={`text-base font-medium tabular-nums ${isDark ? 'text-[#E5E5E5]' : 'text-[#000000]'}`}>
-                {currentTime.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
+                <span className="lg:hidden">
+                  {currentTime.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' })}
+                </span>
+                <span className="hidden lg:inline">
+                  {currentTime.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </span>
               </p>
-              <p className="text-xs opacity-50">System Clock</p>
             </div>
           </div>
 
