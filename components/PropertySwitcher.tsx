@@ -75,4 +75,25 @@ const PropertySwitcher: React.FC<PropertySwitcherProps> = ({ properties, activeI
               <div className="flex items-end justify-between">
                 <div className="flex items-center gap-3">
                   <CloudSun size={24} className={`sm:w-7 sm:h-7 ${isActive ? 'text-[#FCA311]' : 'text-current opacity-40'}`} />
-                  <span className={`text-2xl sm:text-3xl font
+                  <span className={`text-2xl sm:text-3xl font-light tabular-nums ${isActive ? (isDark ? 'text-[#E5E5E5]' : 'text-[#000000]') : 'text-current opacity-60'}`}>
+                    {tempVal}°
+                  </span>
+                </div>
+                <div className={`flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest px-2.5 sm:px-3 py-1.5 rounded-lg border border-transparent ${
+                  prop.security.armed 
+                    ? 'bg-[#FCA311]/20 text-[#FCA311]' 
+                    : (isDark ? 'bg-white/10 text-white/80' : 'bg-black/5 text-black/60')
+                }`}>
+                  {prop.security.armed ? <ShieldCheck size={14} /> : <Unlock size={14} />}
+                  <span>{prop.security.armed ? 'Armed' : 'Disarmed'}</span>
+                </div>
+              </div>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+export default PropertySwitcher;
