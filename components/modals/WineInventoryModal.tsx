@@ -10,27 +10,47 @@ interface WineInventoryModalProps {
   lang: 'en' | 'ar' | 'fr';
 }
 
-const INVENTORY_DATA = [
-  { category: "High-End Spirits", name: "Louis XIII de Rémy Martin", description: "Cognac aged 40-100 years, iconic crystal decanter", price: "$3,000-5,000", qty: 3 },
-  { category: "Champagne", name: "Dom Pérignon P3", description: "Prestige cuvée Champagne aged 40+ years", price: "$3,000-10,000+", qty: 12 },
-  { category: "Rare Whisky", name: "The Macallan Fine & Rare", description: "Single malt Scotch from select vintages", price: "$35,000", qty: 1 },
-  { category: "Rare Whisky", name: "Pappy Van Winkle's Family Reserve 23yr", description: "Kentucky bourbon with cult following", price: "$4,500", qty: 2 },
-  { category: "Tequila", name: "Patrón En Lalique: Serie 2", description: "Ultra-premium tequila in handcrafted crystal", price: "$7,500", qty: 1 },
-  { category: "High-End Spirits", name: "Hennessy Paradis Impérial", description: "Rare cognac blend with eaux-de-vie up to 130 years old", price: "$3,200", qty: 4 },
-  { category: "Wine", name: "Screaming Eagle Cabernet 1992", description: "Cult Napa wine, first vintage", price: "$12,500", qty: 6 },
-  { category: "Wine", name: "Château Pétrus 1947", description: "Legendary Pomerol vintage", price: "$32,000", qty: 1 },
-  { category: "Wine", name: "Domaine de la Romanée-Conti La Tâche 1999", description: "Burgundy's finest", price: "$8,500", qty: 3 },
-  { category: "Rare Whisky", name: "Yamazaki 55 Year Old", description: "Japanese whisky, only 100 bottles released", price: "$800,000", qty: 0 },
-];
-
 const WineInventoryModal: React.FC<WineInventoryModalProps> = ({ isOpen, onClose, theme, lang }) => {
   const isDark = theme === 'dark';
   const isAr = lang === 'ar';
   const isFr = lang === 'fr';
   const [filter, setFilter] = useState('All');
 
-  const filteredData = filter === 'All' ? INVENTORY_DATA : INVENTORY_DATA.filter(item => item.category === filter);
-  const categories = ['All', ...Array.from(new Set(INVENTORY_DATA.map(item => item.category)))];
+  // --- DATASETS ---
+  const INVENTORY_EN = [
+    { category: "High-End Spirits", name: "Louis XIII de Rémy Martin", description: "Cognac aged 40-100 years, iconic crystal decanter", price: "$3,000-5,000", qty: 3 },
+    { category: "Champagne", name: "Dom Pérignon P3", description: "Prestige cuvée Champagne aged 40+ years", price: "$3,000-10,000+", qty: 12 },
+    { category: "Rare Whisky", name: "The Macallan Fine & Rare", description: "Single malt Scotch from select vintages", price: "$35,000", qty: 1 },
+    { category: "Rare Whisky", name: "Pappy Van Winkle's Family Reserve 23yr", description: "Kentucky bourbon with cult following", price: "$4,500", qty: 2 },
+    { category: "Tequila", name: "Patrón En Lalique: Serie 2", description: "Ultra-premium tequila in handcrafted crystal", price: "$7,500", qty: 1 },
+    { category: "High-End Spirits", name: "Hennessy Paradis Impérial", description: "Rare cognac blend with eaux-de-vie up to 130 years old", price: "$3,200", qty: 4 },
+    { category: "Wine", name: "Screaming Eagle Cabernet 1992", description: "Cult Napa wine, first vintage", price: "$12,500", qty: 6 },
+    { category: "Wine", name: "Château Pétrus 1947", description: "Legendary Pomerol vintage", price: "$32,000", qty: 1 },
+    { category: "Wine", name: "Domaine de la Romanée-Conti La Tâche 1999", description: "Burgundy's finest", price: "$8,500", qty: 3 },
+    { category: "Rare Whisky", name: "Yamazaki 55 Year Old", description: "Japanese whisky, only 100 bottles released", price: "$800,000", qty: 0 },
+  ];
+
+  const INVENTORY_FR = [
+    { category: "Spiritueux", name: "Louis XIII de Rémy Martin", description: "Cognac vieilli 40-100 ans, carafe en cristal", price: "4 500 €", qty: 3 },
+    { category: "Champagne", name: "Dom Pérignon P3", description: "Cuvée Prestige vieillie plus de 40 ans", price: "6 000 €", qty: 12 },
+    { category: "Whisky Rare", name: "The Macallan Fine & Rare", description: "Single malt Scotch de millésimes choisis", price: "32 000 €", qty: 1 },
+    { category: "Whisky Rare", name: "Pappy Van Winkle's Family Reserve 23yr", description: "Bourbon du Kentucky culte", price: "4 200 €", qty: 2 },
+    { category: "Tequila", name: "Patrón En Lalique: Serie 2", description: "Tequila ultra-premium en cristal artisanal", price: "7 000 €", qty: 1 },
+    { category: "Spiritueux", name: "Hennessy Paradis Impérial", description: "Mélange rare d'eaux-de-vie jusqu'à 130 ans", price: "3 000 €", qty: 4 },
+    { category: "Vin", name: "Screaming Eagle Cabernet 1992", description: "Vin culte de Napa, premier millésime", price: "11 500 €", qty: 6 },
+    { category: "Vin", name: "Château Pétrus 1947", description: "Millésime légendaire de Pomerol", price: "29 500 €", qty: 1 },
+    { category: "Vin", name: "Domaine de la Romanée-Conti La Tâche 1999", description: "Le meilleur de la Bourgogne", price: "8 000 €", qty: 3 },
+    { category: "Whisky Rare", name: "Yamazaki 55 Ans", description: "Whisky japonais, seulement 100 bouteilles", price: "750 000 €", qty: 0 },
+  ];
+
+  // Arabic usually doesn't show alcohol in this persona (it's hidden/replaced), 
+  // but if the user forces it via this modal logic, we provide English fallback or localized placeholders.
+  // Assuming English fallback for Arabic if enabled.
+  
+  const currentData = isFr ? INVENTORY_FR : INVENTORY_EN;
+
+  const filteredData = filter === 'All' ? currentData : currentData.filter(item => item.category === filter);
+  const categories = ['All', ...Array.from(new Set(currentData.map(item => item.category)))];
 
   const labels = {
       title: isAr ? 'مخزون القبو' : (isFr ? 'Inventaire de la Cave' : 'Cellar Inventory'),

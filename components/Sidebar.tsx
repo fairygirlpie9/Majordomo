@@ -6,10 +6,23 @@ interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
   theme: 'dark' | 'light';
+  lang: 'en' | 'ar' | 'fr';
+  onNavigate: (page: string) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, theme }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, theme, lang, onNavigate }) => {
   const isDark = theme === 'dark';
+  const isAr = lang === 'ar';
+  const isFr = lang === 'fr';
+
+  const labels = {
+      menu: isAr ? 'القائمة' : (isFr ? 'Menu' : 'Menu'),
+      dashboard: isAr ? 'لوحة القيادة' : (isFr ? 'Tableau de Bord' : 'Dashboard'),
+      reports: isAr ? 'التقارير' : (isFr ? 'Rapports' : 'Reports'),
+      settings: isAr ? 'الإعدادات' : (isFr ? 'Paramètres' : 'Settings'),
+      support: isAr ? 'الدعم' : (isFr ? 'Support' : 'Support'),
+      signout: isAr ? 'تسجيل الخروج' : (isFr ? 'Déconnexion' : 'Sign Out')
+  };
 
   return (
     <>
@@ -30,35 +43,47 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, theme }) => {
       >
         <div className="flex flex-col h-full p-8">
           <div className="flex justify-between items-center mb-10">
-            <h2 className="text-2xl font-serif-display font-medium">Menu</h2>
+            <h2 className="text-2xl font-serif-display font-medium">{labels.menu}</h2>
             <button onClick={onClose} className="p-2 opacity-60 hover:opacity-100 transition-opacity">
               <X size={24} />
             </button>
           </div>
 
           <nav className="flex-1 space-y-4">
-             <button className={`flex items-center gap-4 w-full p-3 rounded-xl transition-all bg-[#FCA311]/10 text-[#FCA311] font-bold`}>
+             <button 
+                onClick={() => onNavigate('dashboard')}
+                className={`flex items-center gap-4 w-full p-3 rounded-xl transition-all bg-[#FCA311]/10 text-[#FCA311] font-bold`}
+             >
                 <Home size={20} />
-                <span>Dashboard</span>
+                <span>{labels.dashboard}</span>
              </button>
-             <button className={`flex items-center gap-4 w-full p-3 rounded-xl transition-all opacity-60 hover:opacity-100 hover:bg-current hover:bg-opacity-5`}>
+             <button 
+                onClick={() => onNavigate('reports')}
+                className={`flex items-center gap-4 w-full p-3 rounded-xl transition-all opacity-60 hover:opacity-100 hover:bg-current hover:bg-opacity-5`}
+             >
                 <FileText size={20} />
-                <span className="font-medium">Reports</span>
+                <span className="font-medium">{labels.reports}</span>
              </button>
-             <button className={`flex items-center gap-4 w-full p-3 rounded-xl transition-all opacity-60 hover:opacity-100 hover:bg-current hover:bg-opacity-5`}>
+             <button 
+                onClick={() => onNavigate('settings')}
+                className={`flex items-center gap-4 w-full p-3 rounded-xl transition-all opacity-60 hover:opacity-100 hover:bg-current hover:bg-opacity-5`}
+             >
                 <Settings size={20} />
-                <span className="font-medium">Settings</span>
+                <span className="font-medium">{labels.settings}</span>
              </button>
-             <button className={`flex items-center gap-4 w-full p-3 rounded-xl transition-all opacity-60 hover:opacity-100 hover:bg-current hover:bg-opacity-5`}>
+             <button 
+                onClick={() => onNavigate('support')}
+                className={`flex items-center gap-4 w-full p-3 rounded-xl transition-all opacity-60 hover:opacity-100 hover:bg-current hover:bg-opacity-5`}
+             >
                 <HelpCircle size={20} />
-                <span className="font-medium">Support</span>
+                <span className="font-medium">{labels.support}</span>
              </button>
           </nav>
 
           <div className="pt-8 border-t border-current border-opacity-10">
             <button className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity w-full">
               <LogOut size={20} />
-              <span className="font-medium">Sign Out</span>
+              <span className="font-medium">{labels.signout}</span>
             </button>
           </div>
         </div>

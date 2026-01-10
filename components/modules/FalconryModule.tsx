@@ -2,16 +2,17 @@
 import React from 'react';
 import { Falconry } from '../../types';
 import StatusCard from '../StatusCard';
-import { Bird, Thermometer, Wind, Activity, Utensils } from 'lucide-react';
+import { Bird, Thermometer, Wind, Activity, Utensils, ChevronRight } from 'lucide-react';
 
 interface Props {
   data: Falconry;
   theme: 'dark' | 'light';
   tempUnit: 'C' | 'F';
   lang: 'en' | 'ar' | 'fr';
+  onOpenDetails: () => void;
 }
 
-const FalconryModule: React.FC<Props> = ({ data, theme, tempUnit, lang }) => {
+const FalconryModule: React.FC<Props> = ({ data, theme, tempUnit, lang, onOpenDetails }) => {
   const isDark = theme === 'dark';
   const isAr = lang === 'ar';
   const isFr = lang === 'fr';
@@ -26,7 +27,8 @@ const FalconryModule: React.FC<Props> = ({ data, theme, tempUnit, lang }) => {
     pending: isAr ? 'معلق' : (isFr ? 'En attente' : 'Pending'),
     training: isAr ? 'تدريب' : (isFr ? 'Entraînement' : 'Training'),
     resting: isAr ? 'راحة' : (isFr ? 'Repos' : 'Resting'),
-    medical: isAr ? 'عناية طبية' : (isFr ? 'Soins' : 'Medical')
+    medical: isAr ? 'عناية طبية' : (isFr ? 'Soins' : 'Medical'),
+    manage: isAr ? 'إدارة السرب' : (isFr ? 'Gérer l\'Escadron' : 'Manage Squadron')
   };
 
   const displayTemp = tempUnit === 'F' 
@@ -93,6 +95,16 @@ const FalconryModule: React.FC<Props> = ({ data, theme, tempUnit, lang }) => {
                 </div>
             ))}
         </div>
+
+        <button 
+          onClick={onOpenDetails}
+          className={`w-full group flex items-center justify-between p-5 sm:p-6 rounded-3xl transition-all ${
+            isDark ? 'bg-[#E5E5E5]/5 hover:bg-[#E5E5E5]/10' : 'bg-[#000000]/5 hover:bg-[#000000]/10'
+          }`}
+        >
+          <span className="text-xs font-bold uppercase tracking-widest opacity-80">{labels.manage}</span>
+          <ChevronRight size={20} className="opacity-40 group-hover:opacity-100 transition-opacity" />
+        </button>
       </div>
     </StatusCard>
   );

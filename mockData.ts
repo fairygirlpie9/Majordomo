@@ -280,7 +280,7 @@ export const PROPERTIES_FR: Property[] = [
     environmental: {
       temperature: 24,
       feelsLike: 25,
-      condition: "Sunny",
+      condition: "Ensoleillé",
       humidity: 45,
       windSpeed: 10,
       aqi: 30,
@@ -299,7 +299,7 @@ export const PROPERTIES_FR: Property[] = [
     },
     hvac: [
       { id: "z1", name: "Grand Hall", currentTemp: 20, targetTemp: 21, mode: "auto", status: "optimal", fanSpeed: "low" },
-      { id: "z2", name: "Library", currentTemp: 19, targetTemp: 20, mode: "heat", status: "optimal", fanSpeed: "auto" }
+      { id: "z2", name: "Bibliothèque", currentTemp: 19, targetTemp: 20, mode: "heat", status: "optimal", fanSpeed: "auto" }
     ],
     power: {
       generator: {
@@ -332,11 +332,133 @@ export const PROPERTIES_FR: Property[] = [
       }
     },
     staff: [
-      { id: "s4", name: "Jean-Luc Dubois", role: "Estate Manager", status: "on-site", location: "Office", lastCheckIn: "2024-05-20T08:30:00Z" },
-      { id: "s5", name: "Marie Laurent", role: "Sommelier", status: "on-site", location: "Cellar", lastCheckIn: "2024-05-20T09:15:00Z" }
+      { id: "s4", name: "Jean-Luc Dubois", role: "Gestionnaire", status: "on-site", location: "Bureau", lastCheckIn: "2024-05-20T08:30:00Z" },
+      { id: "s5", name: "Marie Laurent", role: "Sommelier", status: "on-site", location: "Cave", lastCheckIn: "2024-05-20T09:15:00Z" }
     ],
     alerts: [
-       { id: "a3", severity: "info", message: "Wine delivery scheduled for 14:00", timestamp: "2024-05-20T10:00:00Z", acknowledged: false }
+       { id: "a3", severity: "info", message: "Livraison de vin prévue pour 14h00", timestamp: "2024-05-20T10:00:00Z", acknowledged: false }
     ]
+  },
+  {
+    id: "paris-004",
+    name: "Appartement Parisien",
+    image: "https://picsum.photos/id/1020/800/400",
+    location: {
+      address: "Avenue Montaigne, 75008 Paris, France",
+      coordinates: { lat: 48.8662, lon: 2.3076 }
+    },
+    timezone: "Europe/Paris",
+    environmental: {
+      temperature: 18,
+      feelsLike: 17,
+      condition: "Nuageux",
+      humidity: 60,
+      windSpeed: 12,
+      aqi: 40,
+      alerts: []
+    },
+    security: {
+      armed: true,
+      mode: "ARMED",
+      sensors: {
+        doors: { total: 4, open: 0, faulted: 0 },
+        windows: { total: 8, open: 0, faulted: 0 },
+        motion: { active: 10, triggered: 0 },
+        cameras: { total: 6, online: 6, recording: 6 }
+      },
+      lastArmed: "2024-05-20T11:00:00Z"
+    },
+    hvac: [
+      { id: "z1", name: "Salon Principal", currentTemp: 21, targetTemp: 21, mode: "heat", status: "optimal", fanSpeed: "auto" }
+    ],
+    power: {
+      generator: {
+        status: "standby",
+        fuelLevel: 100,
+        runtime: "8 hours",
+        lastTest: "2024-05-15T12:00:00Z"
+      }
+    },
+    wineCellar: {
+      inventory: { totalBottles: 320 },
+      environmental: { temperature: 14, humidity: 60 }
+    },
+    collections: {
+      fleet: [
+        { id: "c1", name: "Porsche Taycan", type: "EV", status: "charging", batteryLevel: 90, location: "Garage Souterrain" }
+      ],
+      vault: {
+        status: "secure",
+        humidity: 45,
+        temp: 20,
+        items: []
+      }
+    },
+    staff: [
+      { id: "s6", name: "Claire Dupont", role: "Gouvernante", status: "on-site", location: "Cuisine", lastCheckIn: "2024-05-20T09:00:00Z" }
+    ],
+    alerts: []
+  },
+  {
+    id: "st-tropez-005",
+    name: "Villa Côte d'Azur",
+    image: "https://picsum.photos/id/1021/800/400",
+    location: {
+      address: "Route des Plages, 83990 Saint-Tropez, France",
+      coordinates: { lat: 43.2677, lon: 6.6407 }
+    },
+    timezone: "Europe/Paris",
+    environmental: {
+      temperature: 26,
+      feelsLike: 28,
+      condition: "Ensoleillé",
+      humidity: 55,
+      windSpeed: 18,
+      aqi: 25,
+      alerts: []
+    },
+    security: {
+      armed: false,
+      mode: "DISARMED",
+      sensors: {
+        doors: { total: 12, open: 4, faulted: 0 },
+        windows: { total: 24, open: 8, faulted: 0 },
+        motion: { active: 10, triggered: 0 },
+        cameras: { total: 18, online: 18, recording: 18 }
+      },
+      lastArmed: "2024-05-19T22:00:00Z"
+    },
+    hvac: [
+      { id: "z1", name: "Terrasse", currentTemp: 26, targetTemp: 24, mode: "cool", status: "optimal", fanSpeed: "high" },
+      { id: "z2", name: "Suite Principale", currentTemp: 22, targetTemp: 20, mode: "cool", status: "optimal", fanSpeed: "auto" }
+    ],
+    power: {
+      generator: {
+        status: "standby",
+        fuelLevel: 85,
+        runtime: "24 hours",
+        lastTest: "2024-05-12T10:00:00Z"
+      }
+    },
+    wineCellar: {
+      inventory: { totalBottles: 1200 },
+      environmental: { temperature: 13, humidity: 65 }
+    },
+    collections: {
+      fleet: [
+        { id: "c1", name: "Riva Aquarama", type: "Marine", status: "ready", location: "Quai Privé" },
+        { id: "c2", name: "Ferrari Roma", type: "Sport", status: "ready", location: "Allée" }
+      ],
+      vault: {
+        status: "secure",
+        humidity: 50,
+        temp: 22,
+        items: []
+      }
+    },
+    staff: [
+      { id: "s7", name: "Antoine Martin", role: "Chef", status: "on-site", location: "Cuisine d'été", lastCheckIn: "2024-05-20T10:30:00Z" }
+    ],
+    alerts: []
   }
 ];

@@ -8,9 +8,10 @@ interface Props {
   data: Power;
   theme: 'dark' | 'light';
   lang: 'en' | 'ar' | 'fr';
+  onOpenDiagnostic: () => void;
 }
 
-const PowerModule: React.FC<Props> = ({ data, theme, lang }) => {
+const PowerModule: React.FC<Props> = ({ data, theme, lang, onOpenDiagnostic }) => {
   const isDark = theme === 'dark';
   const isAr = lang === 'ar';
   const isFr = lang === 'fr';
@@ -87,9 +88,12 @@ const PowerModule: React.FC<Props> = ({ data, theme, lang }) => {
            </div>
         </div>
 
-        <button className={`w-full py-4 rounded-2xl text-xs font-bold uppercase tracking-[0.2em] transition-all border border-current border-opacity-10 hover:border-opacity-30 ${
-          isDark ? 'text-[#E5E5E5]' : 'text-[#000000]'
-        }`}>
+        <button 
+            onClick={onOpenDiagnostic}
+            className={`w-full py-4 rounded-2xl text-xs font-bold uppercase tracking-[0.2em] transition-all border border-current border-opacity-10 hover:border-opacity-30 ${
+            isDark ? 'text-[#E5E5E5]' : 'text-[#000000]'
+            }`}
+        >
           {labels.diagnostic}
         </button>
       </div>

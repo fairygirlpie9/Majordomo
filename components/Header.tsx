@@ -13,9 +13,14 @@ interface HeaderProps {
   toggleSidebar: () => void;
   lang: 'en' | 'ar' | 'fr';
   toggleLang: () => void;
+  onOpenAlerts: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ theme, toggleTheme, tempUnit, toggleTempUnit, activeProperty, currentTime, toggleSidebar, lang, toggleLang }) => {
+const Header: React.FC<HeaderProps> = ({ 
+    theme, toggleTheme, tempUnit, toggleTempUnit, 
+    activeProperty, currentTime, toggleSidebar, 
+    lang, toggleLang, onOpenAlerts 
+}) => {
   const isDark = theme === 'dark';
   const isAr = lang === 'ar';
   const isFr = lang === 'fr';
@@ -134,9 +139,12 @@ const Header: React.FC<HeaderProps> = ({ theme, toggleTheme, tempUnit, toggleTem
               {isDark ? <Sun size={20} className="sm:w-6 sm:h-6" /> : <Moon size={20} className="sm:w-6 sm:h-6" />}
             </button>
 
-            <button className={`relative p-2 sm:p-3 rounded-full transition-colors ${
-                isDark ? 'hover:bg-[#E5E5E5]/10 text-[#E5E5E5]' : 'hover:bg-[#000000]/5 text-[#000000]'
-              }`}>
+            <button 
+                onClick={onOpenAlerts}
+                className={`relative p-2 sm:p-3 rounded-full transition-colors ${
+                    isDark ? 'hover:bg-[#E5E5E5]/10 text-[#E5E5E5]' : 'hover:bg-[#000000]/5 text-[#000000]'
+                }`}
+            >
               <Bell size={20} className="sm:w-6 sm:h-6" />
               {activeProperty.alerts.some(a => !a.acknowledged) && (
                 <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-[#FCA311] rounded-full border-2 border-[#14213D]" />

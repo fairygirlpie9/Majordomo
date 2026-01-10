@@ -9,6 +9,10 @@ import HistoryModal from './components/modals/HistoryModal';
 import BroadcastModal from './components/modals/BroadcastModal';
 import HVACConfigModal from './components/modals/HVACConfigModal';
 import WineInventoryModal from './components/modals/WineInventoryModal';
+import AlertsModal from './components/modals/AlertsModal';
+import FalconryModal from './components/modals/FalconryModal';
+import PowerDiagnosticModal from './components/modals/PowerDiagnosticModal';
+import PlaceholderModal from './components/modals/PlaceholderModal';
 
 const App: React.FC = () => {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
@@ -35,7 +39,8 @@ const App: React.FC = () => {
   }, [currentProperties]);
 
   // Modal State
-  const [activeModal, setActiveModal] = useState<'history' | 'broadcast' | 'hvac' | 'wine' | null>(null);
+  type ModalType = 'history' | 'broadcast' | 'hvac' | 'wine' | 'alerts' | 'falconry' | 'power' | 'settings' | 'reports' | 'support' | null;
+  const [activeModal, setActiveModal] = useState<ModalType>(null);
 
   // Clock update
   useEffect(() => {
@@ -58,6 +63,13 @@ const App: React.FC = () => {
     });
   };
 
+  const getPlaceholderTitle = () => {
+      if (activeModal === 'settings') return lang === 'ar' ? 'الإعدادات' : (lang === 'fr' ? 'Paramètres' : 'Settings');
+      if (activeModal === 'reports') return lang === 'ar' ? 'التقارير' : (lang === 'fr' ? 'Rapports' : 'Reports');
+      if (activeModal === 'support') return lang === 'ar' ? 'الدعم' : (lang === 'fr' ? 'Support' : 'Support');
+      return '';
+  };
+
   // Palette: Dark (#000000 Background), Light (#E5E5E5 Background)
   return (
     <div 
@@ -75,10 +87,20 @@ const App: React.FC = () => {
         toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
         lang={lang}
         toggleLang={toggleLang}
+        onOpenAlerts={() => setActiveModal('alerts')}
       />
 
       {/* Sidebar */}
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} theme={theme} lang={lang} />
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={() => setSidebarOpen(false)} 
+        theme={theme} 
+        lang={lang}
+        onNavigate={(page) => {
+            if (page === 'dashboard') setSidebarOpen(false);
+            else setActiveModal(page as ModalType);
+        }}
+      />
 
       <main className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10 pb-20 pt-24 md:pt-28">
         {/* Property Selection */}
@@ -104,13 +126,18 @@ const App: React.FC = () => {
           onOpenBroadcast={() => setActiveModal('broadcast')}
           onOpenHVAC={() => setActiveModal('hvac')}
           onOpenWine={() => setActiveModal('wine')}
+          onOpenFalconry={() => setActiveModal('falconry')}
+          onOpenPower={() => setActiveModal('power')}
         />
       </main>
 
       {/* Floating Alerts Summary for Mobile */}
       {activeProperty.alerts.filter(a => !a.acknowledged).length > 0 && (
         <div className={`fixed bottom-6 ${lang === 'ar' ? 'left-6' : 'right-6'} lg:hidden z-40`}>
-          <button className="bg-[#FCA311] text-[#000000] p-4 rounded-full shadow-lg shadow-[#FCA311]/20 animate-pulse">
+          <button 
+            onClick={() => setActiveModal('alerts')}
+            className="bg-[#FCA311] text-[#000000] p-4 rounded-full shadow-lg shadow-[#FCA311]/20 animate-pulse"
+          >
             <span className="sr-only">Active Alerts</span>
             <div className="relative">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
@@ -127,13 +154,11 @@ const App: React.FC = () => {
         isOpen={activeModal === 'history'} 
         onClose={() => setActiveModal(null)} 
         theme={theme} 
-        lang={lang}
       />
       <BroadcastModal 
         isOpen={activeModal === 'broadcast'} 
         onClose={() => setActiveModal(null)} 
         theme={theme} 
-        lang={lang}
       />
       <HVACConfigModal 
         isOpen={activeModal === 'hvac'} 
@@ -141,11 +166,39 @@ const App: React.FC = () => {
         theme={theme} 
         zones={activeProperty.hvac}
         tempUnit={tempUnit}
-        lang={lang}
       />
       <WineInventoryModal 
         isOpen={activeModal === 'wine'} 
         onClose={() => setActiveModal(null)} 
+        theme={theme}
+        lang={lang}
+      />
+      <AlertsModal
+        isOpen={activeModal === 'alerts'}
+        onClose={() => setActiveModal(null)}
+        theme={theme}
+        lang={lang}
+        alerts={activeProperty.alerts}
+      />
+      {activeProperty.falconry && (
+          <FalconryModal
+            isOpen={activeModal === 'falconry'}
+            onClose={() => setActiveModal(null)}
+            theme={theme}
+            lang={lang}
+            data={activeProperty.falconry}
+          />
+      )}
+      <PowerDiagnosticModal
+        isOpen={activeModal === 'power'}
+        onClose={() => setActiveModal(null)}
+        theme={theme}
+        lang={lang}
+      />
+      <PlaceholderModal
+        isOpen={['settings', 'reports', 'support'].includes(activeModal || '')}
+        onClose={() => setActiveModal(null)}
+        title={getPlaceholderTitle()}
         theme={theme}
         lang={lang}
       />

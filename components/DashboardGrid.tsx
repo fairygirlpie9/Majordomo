@@ -20,6 +20,8 @@ interface DashboardGridProps {
   onOpenBroadcast: () => void;
   onOpenHVAC: () => void;
   onOpenWine: () => void;
+  onOpenFalconry: () => void;
+  onOpenPower: () => void;
 }
 
 const DashboardGrid: React.FC<DashboardGridProps> = ({ 
@@ -30,7 +32,9 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
   onOpenHistory,
   onOpenBroadcast,
   onOpenHVAC,
-  onOpenWine
+  onOpenWine,
+  onOpenFalconry,
+  onOpenPower
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 lg:gap-8">
@@ -38,7 +42,12 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
       <div className="lg:col-span-4 space-y-6 lg:space-y-8">
         <EnvironmentalModule data={property.environmental} theme={theme} tempUnit={tempUnit} lang={lang} />
         <SecurityModule data={property.security} theme={theme} lang={lang} />
-        <PowerModule data={property.power} theme={theme} lang={lang} />
+        <PowerModule 
+            data={property.power} 
+            theme={theme} 
+            lang={lang} 
+            onOpenDiagnostic={onOpenPower}
+        />
       </div>
 
       {/* Column 2: Climate (HVAC), Falconry OR Wine */}
@@ -56,6 +65,7 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
             theme={theme} 
             tempUnit={tempUnit}
             lang={lang}
+            onOpenDetails={onOpenFalconry}
           />
         )}
         {property.wineCellar && !property.falconry?.enabled && (
