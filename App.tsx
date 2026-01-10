@@ -158,7 +158,8 @@ const App: React.FC = () => {
       <BroadcastModal 
         isOpen={activeModal === 'broadcast'} 
         onClose={() => setActiveModal(null)} 
-        theme={theme} 
+        theme={theme}
+        lang={lang}
       />
       <HVACConfigModal 
         isOpen={activeModal === 'hvac'} 
@@ -166,6 +167,7 @@ const App: React.FC = () => {
         theme={theme} 
         zones={activeProperty.hvac}
         tempUnit={tempUnit}
+        lang={lang}
       />
       <WineInventoryModal 
         isOpen={activeModal === 'wine'} 

@@ -43,10 +43,6 @@ const WineInventoryModal: React.FC<WineInventoryModalProps> = ({ isOpen, onClose
     { category: "Whisky Rare", name: "Yamazaki 55 Ans", description: "Whisky japonais, seulement 100 bouteilles", price: "750 000 €", qty: 0 },
   ];
 
-  // Arabic usually doesn't show alcohol in this persona (it's hidden/replaced), 
-  // but if the user forces it via this modal logic, we provide English fallback or localized placeholders.
-  // Assuming English fallback for Arabic if enabled.
-  
   const currentData = isFr ? INVENTORY_FR : INVENTORY_EN;
 
   const filteredData = filter === 'All' ? currentData : currentData.filter(item => item.category === filter);
