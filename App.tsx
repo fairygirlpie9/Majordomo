@@ -1,25 +1,41 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { MOCK_PROPERTIES } from './mockData';
-import { Property, Alert } from './types';
+import { PROPERTIES_EN, PROPERTIES_AR, PROPERTIES_FR } from './mockData';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import PropertySwitcher from './components/PropertySwitcher';
 import DashboardGrid from './components/DashboardGrid';
-import WineInventoryModal from './components/modals/WineInventoryModal';
 import HistoryModal from './components/modals/HistoryModal';
 import BroadcastModal from './components/modals/BroadcastModal';
 import HVACConfigModal from './components/modals/HVACConfigModal';
+import WineInventoryModal from './components/modals/WineInventoryModal';
 
 const App: React.FC = () => {
-  const [activePropertyId, setActivePropertyId] = useState<string>(MOCK_PROPERTIES[0].id);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [tempUnit, setTempUnit] = useState<'C' | 'F'>('C');
+  const [lang, setLang] = useState<'en' | 'ar' | 'fr'>('en');
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
+  // Determine which set of properties to use based on language
+  const currentProperties = useMemo(() => {
+    switch(lang) {
+      case 'ar': return PROPERTIES_AR;
+      case 'fr': return PROPERTIES_FR;
+      default: return PROPERTIES_EN;
+    }
+  }, [lang]);
+
+  // State for active property ID
+  const [activePropertyId, setActivePropertyId] = useState<string>(currentProperties[0].id);
+
+  // When properties change (due to lang change), reset to the first property in the new list
+  useEffect(() => {
+    setActivePropertyId(currentProperties[0].id);
+  }, [currentProperties]);
+
   // Modal State
-  const [activeModal, setActiveModal] = useState<'wine' | 'history' | 'broadcast' | 'hvac' | null>(null);
+  const [activeModal, setActiveModal] = useState<'history' | 'broadcast' | 'hvac' | 'wine' | null>(null);
 
   // Clock update
   useEffect(() => {
@@ -28,15 +44,26 @@ const App: React.FC = () => {
   }, []);
 
   const activeProperty = useMemo(() => 
-    MOCK_PROPERTIES.find(p => p.id === activePropertyId) || MOCK_PROPERTIES[0]
-  , [activePropertyId]);
+    currentProperties.find(p => p.id === activePropertyId) || currentProperties[0]
+  , [activePropertyId, currentProperties]);
 
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   const toggleTempUnit = () => setTempUnit(prev => prev === 'C' ? 'F' : 'C');
+  
+  const toggleLang = () => {
+    setLang(prev => {
+      if (prev === 'en') return 'ar';
+      if (prev === 'ar') return 'fr';
+      return 'en';
+    });
+  };
 
   // Palette: Dark (#000000 Background), Light (#E5E5E5 Background)
   return (
-    <div className={`min-h-screen transition-colors duration-700 ${theme === 'dark' ? 'bg-[#000000] text-[#E5E5E5]' : 'bg-[#E5E5E5] text-[#000000]'}`}>
+    <div 
+      dir={lang === 'ar' ? 'rtl' : 'ltr'}
+      className={`min-h-screen transition-colors duration-700 ${theme === 'dark' ? 'bg-[#000000] text-[#E5E5E5]' : 'bg-[#E5E5E5] text-[#000000]'} ${lang === 'ar' ? 'font-sans' : 'font-sans'}`}
+    >
       {/* Header */}
       <Header 
         theme={theme} 
@@ -46,21 +73,24 @@ const App: React.FC = () => {
         activeProperty={activeProperty}
         currentTime={currentTime}
         toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
+        lang={lang}
+        toggleLang={toggleLang}
       />
 
       {/* Sidebar */}
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} theme={theme} />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} theme={theme} lang={lang} />
 
       <main className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10 pb-20 pt-24 md:pt-28">
         {/* Property Selection */}
         <section className="mb-6 md:mb-10">
           <PropertySwitcher 
-            properties={MOCK_PROPERTIES}
+            properties={currentProperties}
             activeId={activePropertyId}
             onSelect={setActivePropertyId}
             theme={theme}
             currentTime={currentTime}
             tempUnit={tempUnit}
+            lang={lang}
           />
         </section>
 
@@ -69,16 +99,17 @@ const App: React.FC = () => {
           property={activeProperty} 
           theme={theme} 
           tempUnit={tempUnit}
-          onOpenInventory={() => setActiveModal('wine')}
+          lang={lang}
           onOpenHistory={() => setActiveModal('history')}
           onOpenBroadcast={() => setActiveModal('broadcast')}
           onOpenHVAC={() => setActiveModal('hvac')}
+          onOpenWine={() => setActiveModal('wine')}
         />
       </main>
 
-      {/* Floating Alerts Summary for Mobile - Using Orange #FCA311 */}
+      {/* Floating Alerts Summary for Mobile */}
       {activeProperty.alerts.filter(a => !a.acknowledged).length > 0 && (
-        <div className="fixed bottom-6 right-6 lg:hidden z-40">
+        <div className={`fixed bottom-6 ${lang === 'ar' ? 'left-6' : 'right-6'} lg:hidden z-40`}>
           <button className="bg-[#FCA311] text-[#000000] p-4 rounded-full shadow-lg shadow-[#FCA311]/20 animate-pulse">
             <span className="sr-only">Active Alerts</span>
             <div className="relative">
@@ -92,20 +123,17 @@ const App: React.FC = () => {
       )}
 
       {/* Modals */}
-      <WineInventoryModal 
-        isOpen={activeModal === 'wine'} 
-        onClose={() => setActiveModal(null)} 
-        theme={theme} 
-      />
       <HistoryModal 
         isOpen={activeModal === 'history'} 
         onClose={() => setActiveModal(null)} 
         theme={theme} 
+        lang={lang}
       />
       <BroadcastModal 
         isOpen={activeModal === 'broadcast'} 
         onClose={() => setActiveModal(null)} 
         theme={theme} 
+        lang={lang}
       />
       <HVACConfigModal 
         isOpen={activeModal === 'hvac'} 
@@ -113,6 +141,13 @@ const App: React.FC = () => {
         theme={theme} 
         zones={activeProperty.hvac}
         tempUnit={tempUnit}
+        lang={lang}
+      />
+      <WineInventoryModal 
+        isOpen={activeModal === 'wine'} 
+        onClose={() => setActiveModal(null)} 
+        theme={theme}
+        lang={lang}
       />
     </div>
   );

@@ -47,20 +47,49 @@ export interface Power {
   };
 }
 
-export interface WineCellar {
+export interface Falcon {
+  id: string;
+  name: string;
+  species: string;
+  weight: number; // grams
+  status: 'resting' | 'training' | 'medical';
+  feedStatus: 'fed' | 'pending';
+}
+
+export interface Falconry {
   enabled: boolean;
-  tier: number;
-  inventory: {
-    totalBottles: number;
-    estimatedValue: number;
-  };
+  facilityName: string;
+  falcons: Falcon[];
   environmental: {
     temperature: number;
-    targetTemp: number;
     humidity: number;
-    targetHumidity: number;
-    vibration: 'normal' | 'alert';
-    light: 'on' | 'off';
+    airQuality: 'pure' | 'filtered' | 'warning';
+  };
+}
+
+export interface Vehicle {
+  id: string;
+  name: string;
+  type: string;
+  status: 'ready' | 'service' | 'charging';
+  batteryLevel?: number; // for EVs
+  location: string;
+}
+
+export interface VaultItem {
+  id: string;
+  name: string;
+  category: 'watch' | 'jewelry' | 'art';
+  status: 'secure' | 'accessed';
+}
+
+export interface Collections {
+  fleet: Vehicle[];
+  vault: {
+    items: VaultItem[];
+    humidity: number;
+    temp: number;
+    status: 'secure' | 'warning';
   };
 }
 
@@ -81,6 +110,16 @@ export interface Alert {
   acknowledged: boolean;
 }
 
+export interface WineCellar {
+  inventory: {
+    totalBottles: number;
+  };
+  environmental: {
+    temperature: number;
+    humidity: number;
+  };
+}
+
 export interface Property {
   id: string;
   name: string;
@@ -91,7 +130,9 @@ export interface Property {
   security: Security;
   hvac: HVACZone[];
   power: Power;
-  wineCellar: WineCellar;
+  falconry?: Falconry; // Optional now
+  collections: Collections;
   staff: Staff[];
   alerts: Alert[];
+  wineCellar?: WineCellar;
 }

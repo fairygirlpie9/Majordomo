@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { HVACZone } from '../../types';
 import StatusCard from '../StatusCard';
@@ -7,11 +8,24 @@ interface Props {
   zones: HVACZone[];
   theme: 'dark' | 'light';
   tempUnit: 'C' | 'F';
+  lang: 'en' | 'ar' | 'fr';
   onOpenConfig: () => void;
 }
 
-const HVACModule: React.FC<Props> = ({ zones, theme, tempUnit, onOpenConfig }) => {
+const HVACModule: React.FC<Props> = ({ zones, theme, tempUnit, lang, onOpenConfig }) => {
   const isDark = theme === 'dark';
+  const isAr = lang === 'ar';
+  const isFr = lang === 'fr';
+
+  const labels = {
+    title: isAr ? 'التحكم بالمناخ' : (isFr ? 'Climatisation' : 'Climate Control'),
+    current: isAr ? 'الحالي' : (isFr ? 'Actuel' : 'Current'),
+    target: isAr ? 'الهدف' : (isFr ? 'Cible' : 'Target'),
+    systemOff: isAr ? 'النظام مغلق' : (isFr ? 'Arrêt' : 'System Off'),
+    autoMode: isAr ? 'تلقائي' : (isFr ? 'Auto' : 'Auto Mode'),
+    configure: isAr ? 'تكوين جميع المناطق' : (isFr ? 'Configurer les Zones' : 'Configure All Zones'),
+    optimal: isAr ? 'مثالي' : 'optimal'
+  };
 
   const toUnit = (temp: number) => {
     return tempUnit === 'F' ? Math.round((temp * 9/5) + 32) : temp;
@@ -20,7 +34,7 @@ const HVACModule: React.FC<Props> = ({ zones, theme, tempUnit, onOpenConfig }) =
   const scaleMax = tempUnit === 'F' ? 104 : 40; 
 
   return (
-    <StatusCard title="Climate Control" icon={Thermometer} theme={theme} accentColor="rose" footer="00:15m ago">
+    <StatusCard title={labels.title} icon={Thermometer} theme={theme} accentColor="rose" footer="00:15m ago">
       <div className="space-y-4 sm:space-y-5">
         {zones.map((zone) => {
           const current = toUnit(zone.currentTemp);
@@ -49,12 +63,12 @@ const HVACModule: React.FC<Props> = ({ zones, theme, tempUnit, onOpenConfig }) =
                     <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded whitespace-nowrap ${
                       zone.status === 'optimal' ? 'text-[#FCA311] bg-[#FCA311]/10' : 'text-[#E5E5E5] bg-[#E5E5E5]/10'
                     }`}>
-                      {zone.status}
+                      {zone.status === 'optimal' ? labels.optimal : zone.status}
                     </span>
                     <span className={`text-[10px] uppercase font-bold whitespace-nowrap flex items-center gap-1 transition-all ${
                         isDark ? 'text-[#E5E5E5] group-hover/btn:text-[#FCA311]' : 'text-[#000000] group-hover/btn:text-[#FCA311]'
                     }`}>
-                        {zone.mode === 'off' ? 'System Off' : 'Auto Mode'}
+                        {zone.mode === 'off' ? labels.systemOff : labels.autoMode}
                         <Settings2 size={10} className="opacity-0 group-hover/btn:opacity-100 transition-opacity" />
                     </span>
                   </button>
@@ -71,7 +85,7 @@ const HVACModule: React.FC<Props> = ({ zones, theme, tempUnit, onOpenConfig }) =
               <div className="flex items-end justify-between gap-4">
                 <div className="flex flex-col">
                   <span className={`text-4xl sm:text-5xl font-light tabular-nums leading-none ${isDark ? 'text-[#E5E5E5]' : 'text-[#000000]'}`}>{current}°</span>
-                  <span className="text-[10px] opacity-40 font-bold uppercase tracking-wider mt-2">Current</span>
+                  <span className="text-[10px] opacity-40 font-bold uppercase tracking-wider mt-2">{labels.current}</span>
                 </div>
                 
                 <div className="flex flex-col items-end">
@@ -80,7 +94,7 @@ const HVACModule: React.FC<Props> = ({ zones, theme, tempUnit, onOpenConfig }) =
                     <span className={`text-xl font-bold tabular-nums w-8 text-center ${isDark ? 'text-[#E5E5E5]' : 'text-[#000000]'}`}>{target}°</span>
                     <button className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-current hover:bg-opacity-10 transition-colors text-lg font-medium">+</button>
                   </div>
-                  <span className="text-[10px] opacity-40 font-bold uppercase tracking-wider mt-2 mr-1">Target</span>
+                  <span className={`text-[10px] opacity-40 font-bold uppercase tracking-wider mt-2 ${isAr ? 'ml-1' : 'mr-1'}`}>{labels.target}</span>
                 </div>
               </div>
 
@@ -101,7 +115,7 @@ const HVACModule: React.FC<Props> = ({ zones, theme, tempUnit, onOpenConfig }) =
             isDark ? 'text-[#E5E5E5]' : 'text-[#000000]'
           }`}
         >
-          Configure All Zones
+          {labels.configure}
         </button>
       </div>
     </StatusCard>

@@ -1,19 +1,30 @@
+
 import React from 'react';
 import { Staff } from '../../types';
 import StatusCard from '../StatusCard';
-import { Users, User, Clock, MapPin } from 'lucide-react';
+import { Users, Clock, MapPin } from 'lucide-react';
 
 interface Props {
   staff: Staff[];
   theme: 'dark' | 'light';
+  lang: 'en' | 'ar' | 'fr';
   onOpenBroadcast: () => void;
 }
 
-const StaffModule: React.FC<Props> = ({ staff, theme, onOpenBroadcast }) => {
+const StaffModule: React.FC<Props> = ({ staff, theme, lang, onOpenBroadcast }) => {
   const isDark = theme === 'dark';
+  const isAr = lang === 'ar';
+  const isFr = lang === 'fr';
+
+  const labels = {
+    title: isAr ? 'الموظفين' : (isFr ? 'Personnel' : 'Personnel'),
+    broadcast: isAr ? 'إرسال تعميم' : (isFr ? 'Diffuser' : 'Broadcast Message'),
+    checkin: isAr ? 'تسجيل دخول' : (isFr ? 'Pointage' : 'Check-in'),
+    status: isAr ? 'في الموقع' : (isFr ? 'Sur place' : 'on-site')
+  };
 
   return (
-    <StatusCard title="Personnel" icon={Users} theme={theme} accentColor="sapphire" footer="Sync active">
+    <StatusCard title={labels.title} icon={Users} theme={theme} accentColor="sapphire" footer="Sync active">
       <div className="space-y-4 sm:space-y-5">
         {staff.map((person) => (
           <div 
@@ -35,7 +46,7 @@ const StaffModule: React.FC<Props> = ({ staff, theme, onOpenBroadcast }) => {
               <div className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest whitespace-nowrap ${
                 person.status === 'on-site' ? 'text-[#FCA311] bg-[#FCA311]/10' : 'text-current opacity-60 bg-current bg-opacity-5'
               }`}>
-                {person.status}
+                {person.status === 'on-site' ? labels.status : person.status}
               </div>
             </div>
 
@@ -46,7 +57,7 @@ const StaffModule: React.FC<Props> = ({ staff, theme, onOpenBroadcast }) => {
               </div>
               <div className="flex items-center gap-2 opacity-50">
                 <Clock size={14} />
-                <span className="text-xs font-medium tabular-nums whitespace-nowrap">Check-in: 08:00 AM</span>
+                <span className="text-xs font-medium tabular-nums whitespace-nowrap">{labels.checkin}: 08:00 AM</span>
               </div>
             </div>
           </div>
@@ -58,7 +69,7 @@ const StaffModule: React.FC<Props> = ({ staff, theme, onOpenBroadcast }) => {
             isDark ? 'text-[#E5E5E5]' : 'text-[#000000]'
           }`}
         >
-          Broadcast Message
+          {labels.broadcast}
         </button>
       </div>
     </StatusCard>

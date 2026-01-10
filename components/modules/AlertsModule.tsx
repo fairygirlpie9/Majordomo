@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Alert } from '../../types';
 import StatusCard from '../StatusCard';
@@ -6,20 +7,31 @@ import { Bell, AlertTriangle, Info, CheckCircle2 } from 'lucide-react';
 interface Props {
   alerts: Alert[];
   theme: 'dark' | 'light';
+  lang: 'en' | 'ar' | 'fr';
 }
 
-const AlertsModule: React.FC<Props> = ({ alerts, theme }) => {
+const AlertsModule: React.FC<Props> = ({ alerts, theme, lang }) => {
   const isDark = theme === 'dark';
+  const isAr = lang === 'ar';
+  const isFr = lang === 'fr';
   const activeAlerts = alerts.filter(a => !a.acknowledged);
 
+  const labels = {
+    title: isAr ? 'تنبيهات النظام' : (isFr ? 'Alertes' : 'System Alerts'),
+    nominal: isAr ? 'جميع الأنظمة مستقرة' : (isFr ? 'Systèmes Nominaux' : 'All Systems Nominal'),
+    noPending: isAr ? 'لا توجد إشعارات معلقة' : (isFr ? 'Aucune notification' : 'No pending notifications'),
+    ack: isAr ? 'إقرار' : (isFr ? 'ACQUITTER' : 'ACKNOWLEDGE'),
+    details: isAr ? 'التفاصيل' : (isFr ? 'DÉTAILS' : 'DETAILS')
+  };
+
   return (
-    <StatusCard title="System Alerts" icon={Bell} theme={theme} accentColor="rose" footer="Monitoring Live">
+    <StatusCard title={labels.title} icon={Bell} theme={theme} accentColor="rose" footer="Monitoring Live">
       <div className="space-y-4">
         {activeAlerts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 opacity-40 text-center">
             <CheckCircle2 size={40} className="mb-4 text-[#FCA311]" />
-            <p className="text-sm font-bold uppercase tracking-widest">All Systems Nominal</p>
-            <p className="text-xs mt-1">No pending notifications</p>
+            <p className="text-sm font-bold uppercase tracking-widest">{labels.nominal}</p>
+            <p className="text-xs mt-1">{labels.noPending}</p>
           </div>
         ) : (
           activeAlerts.map((alert) => (
@@ -52,14 +64,14 @@ const AlertsModule: React.FC<Props> = ({ alerts, theme }) => {
               {/* Actions */}
               <div className="flex gap-3 mt-2">
                 <button className="flex-1 py-3 px-4 rounded-xl bg-[#FCA311] text-[#000000] text-[10px] font-bold uppercase tracking-wider hover:bg-[#FCA311]/90 transition-all shadow-lg shadow-[#FCA311]/10">
-                  ACKNOWLEDGE
+                  {labels.ack}
                 </button>
                 <button className={`py-3 px-6 rounded-xl border text-[10px] font-bold uppercase tracking-wider transition-colors ${
                   isDark 
                     ? 'border-[#E5E5E5]/10 hover:bg-[#E5E5E5]/5 text-[#E5E5E5]' 
                     : 'border-[#000000]/10 hover:bg-[#000000]/5 text-[#000000]'
                 }`}>
-                  DETAILS
+                  {labels.details}
                 </button>
               </div>
             </div>

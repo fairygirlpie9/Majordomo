@@ -7,6 +7,7 @@ interface WineInventoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   theme: 'dark' | 'light';
+  lang: 'en' | 'ar' | 'fr';
 }
 
 const INVENTORY_DATA = [
@@ -22,15 +23,24 @@ const INVENTORY_DATA = [
   { category: "Rare Whisky", name: "Yamazaki 55 Year Old", description: "Japanese whisky, only 100 bottles released", price: "$800,000", qty: 0 },
 ];
 
-const WineInventoryModal: React.FC<WineInventoryModalProps> = ({ isOpen, onClose, theme }) => {
+const WineInventoryModal: React.FC<WineInventoryModalProps> = ({ isOpen, onClose, theme, lang }) => {
   const isDark = theme === 'dark';
+  const isAr = lang === 'ar';
+  const isFr = lang === 'fr';
   const [filter, setFilter] = useState('All');
 
   const filteredData = filter === 'All' ? INVENTORY_DATA : INVENTORY_DATA.filter(item => item.category === filter);
   const categories = ['All', ...Array.from(new Set(INVENTORY_DATA.map(item => item.category)))];
 
+  const labels = {
+      title: isAr ? 'مخزون القبو' : (isFr ? 'Inventaire de la Cave' : 'Cellar Inventory'),
+      search: isAr ? 'بحث...' : (isFr ? 'Rechercher...' : 'Search collection...'),
+      outOfStock: isAr ? 'نفذت الكمية' : (isFr ? 'Épuisé' : 'Out of Stock'),
+      estValue: isAr ? 'القيمة التقديرية' : (isFr ? 'Valeur Est.' : 'Est. Value')
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Cellar Inventory" theme={theme}>
+    <Modal isOpen={isOpen} onClose={onClose} title={labels.title} theme={theme}>
       {/* Controls */}
       <div className="flex flex-col md:flex-row gap-4 mb-8">
         <div className={`flex-1 flex items-center px-4 py-3 rounded-xl border ${
@@ -39,7 +49,7 @@ const WineInventoryModal: React.FC<WineInventoryModalProps> = ({ isOpen, onClose
           <Search size={18} className="opacity-50 mr-3" />
           <input 
             type="text" 
-            placeholder="Search collection..." 
+            placeholder={labels.search}
             className="bg-transparent border-none outline-none w-full text-sm font-medium" 
           />
         </div>
@@ -76,7 +86,7 @@ const WineInventoryModal: React.FC<WineInventoryModalProps> = ({ isOpen, onClose
                 }`}>
                   {item.category}
                 </span>
-                {item.qty === 0 && <span className="text-[10px] font-bold uppercase text-red-500">Out of Stock</span>}
+                {item.qty === 0 && <span className="text-[10px] font-bold uppercase text-red-500">{labels.outOfStock}</span>}
               </div>
               <h3 className={`text-xl font-serif-display font-medium ${item.qty === 0 ? 'opacity-50' : ''}`}>{item.name}</h3>
               <p className="text-sm opacity-60 mt-1">{item.description}</p>
@@ -85,7 +95,7 @@ const WineInventoryModal: React.FC<WineInventoryModalProps> = ({ isOpen, onClose
             <div className="flex items-center justify-between md:justify-end gap-8 md:min-w-[200px]">
               <div className="text-right">
                 <p className="text-sm font-bold tabular-nums opacity-80">{item.price}</p>
-                <p className="text-[10px] uppercase font-bold opacity-40">Est. Value</p>
+                <p className="text-[10px] uppercase font-bold opacity-40">{labels.estValue}</p>
               </div>
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold tabular-nums border ${
                 isDark ? 'border-[#E5E5E5]/10 bg-black/20' : 'border-[#000000]/10 bg-white/50'

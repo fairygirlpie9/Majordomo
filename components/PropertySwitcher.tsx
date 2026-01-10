@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Property } from '../types';
 import { MapPin, CloudSun, AlertTriangle, Clock, ShieldCheck, Unlock } from 'lucide-react';
@@ -9,10 +10,15 @@ interface PropertySwitcherProps {
   theme: 'dark' | 'light';
   currentTime: Date;
   tempUnit: 'C' | 'F';
+  lang: 'en' | 'ar' | 'fr';
 }
 
-const PropertySwitcher: React.FC<PropertySwitcherProps> = ({ properties, activeId, onSelect, theme, currentTime, tempUnit }) => {
+const PropertySwitcher: React.FC<PropertySwitcherProps> = ({ properties, activeId, onSelect, theme, currentTime, tempUnit, lang }) => {
   const isDark = theme === 'dark';
+  const isAr = lang === 'ar';
+  const isFr = lang === 'fr';
+
+  const locale = isAr ? 'ar-SA' : (isFr ? 'fr-FR' : 'en-GB');
 
   return (
     <div className="flex overflow-x-auto no-scrollbar gap-4 sm:gap-5 py-6 px-4 -mx-4">
@@ -21,11 +27,11 @@ const PropertySwitcher: React.FC<PropertySwitcherProps> = ({ properties, activeI
         const unreadAlerts = prop.alerts.filter(a => !a.acknowledged).length;
 
         // Calculate specific property time
-        const localTime = currentTime.toLocaleTimeString([], { 
+        const localTime = currentTime.toLocaleTimeString(locale, { 
           timeZone: prop.timezone, 
           hour: '2-digit', 
           minute: '2-digit',
-          hour12: false
+          hour12: !isFr
         });
 
         // Convert temp
@@ -49,13 +55,13 @@ const PropertySwitcher: React.FC<PropertySwitcherProps> = ({ properties, activeI
           >
             <div className="flex flex-col h-full justify-between">
               <div className="flex justify-between items-start mb-4">
-                 <div className="flex-1 pr-2">
+                 <div className={`flex-1 ${isAr ? 'pl-2' : 'pr-2'}`}>
                    <h3 className={`font-serif-display font-medium text-xl sm:text-2xl leading-tight transition-colors ${isActive ? (isDark ? 'text-[#E5E5E5]' : 'text-[#000000]') : 'opacity-60 text-current'}`}>
                      {prop.name}
                    </h3>
                    <div className="flex items-center gap-2 mt-2 opacity-60">
                       <MapPin size={14} />
-                      <span className="text-xs sm:text-sm uppercase tracking-wide truncate max-w-[150px]">{prop.location.address.split(',')[1].trim()}</span>
+                      <span className="text-xs sm:text-sm uppercase tracking-wide truncate max-w-[150px]">{prop.location.address.split(',')[0].trim()}</span>
                    </div>
                  </div>
                  <div className="flex flex-col items-end gap-2 flex-shrink-0 pt-1">
@@ -85,7 +91,15 @@ const PropertySwitcher: React.FC<PropertySwitcherProps> = ({ properties, activeI
                     : (isDark ? 'bg-white/10 text-white/80' : 'bg-black/5 text-black/60')
                 }`}>
                   {prop.security.armed ? <ShieldCheck size={14} /> : <Unlock size={14} />}
-                  <span>{prop.security.armed ? 'Armed' : 'Disarmed'}</span>
+                  <span>
+                    {isAr 
+                      ? (prop.security.armed ? 'مؤمن' : 'غير مؤمن') 
+                      : (isFr 
+                          ? (prop.security.armed ? 'Armé' : 'Désarmé') 
+                          : (prop.security.armed ? 'Armed' : 'Disarmed')
+                        )
+                    }
+                  </span>
                 </div>
               </div>
             </div>
